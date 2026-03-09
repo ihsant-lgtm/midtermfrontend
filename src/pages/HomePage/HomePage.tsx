@@ -5,17 +5,14 @@ import {
   Card,
   CardContent,
   Container,
+  IconButton,
   Stack,
   Typography,
 } from '@mui/material'
-import { useNavigate } from 'react-router-dom'
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline'
+import { Link, useNavigate } from 'react-router-dom'
 import { REST_COUNTRIES_BASE_URL } from '../../constants/api'
-import type { CountryFlags } from '../../types/country'
-
-interface StoredTrip {
-  code: string
-  note: string
-}
+import type { CountryFlags, Trip } from '../../types/country'
 
 interface CountrySummary {
   alpha3Code: string
@@ -27,14 +24,14 @@ const TRIPS_STORAGE_KEY = 'my_trips'
 
 export function HomePage() {
   const navigate = useNavigate()
-  const [trips, setTrips] = useState<StoredTrip[]>([])
+  const [trips, setTrips] = useState<Trip[]>([])
   const [countries, setCountries] = useState<Record<string, CountrySummary>>({})
   const [loading, setLoading] = useState(false)
 
   // Чтение списка поездок из localStorage
   useEffect(() => {
     const raw = window.localStorage.getItem(TRIPS_STORAGE_KEY)
-    const parsed: StoredTrip[] = raw ? JSON.parse(raw) : []
+    const parsed: Trip[] = raw ? JSON.parse(raw) : []
     setTrips(parsed)
   }, [])
 
@@ -74,6 +71,12 @@ export function HomePage() {
     void loadCountries()
   }, [trips])
 
+  const handleDeleteTrip = (indexToRemove: number) => {
+    const updated = trips.filter((_, index) => index !== indexToRemove)
+    setTrips(updated)
+    window.localStorage.setItem(TRIPS_STORAGE_KEY, JSON.stringify(updated))
+  }
+
   return (
     <Container maxWidth="md">
       <Stack spacing={3}>
@@ -99,26 +102,52 @@ export function HomePage() {
             return (
               <Card key={`${trip.code}-${index}`} variant="outlined">
                 <CardContent>
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    {country && (
-                      <Box
-                        component="img"
-                        src={country.flags.png}
-                        alt={country.name}
-                        sx={{ height: 40, borderRadius: 0.5 }}
-                      />
-                    )}
-
-                    <Box>
-                      <Typography variant="subtitle1" fontWeight={700}>
-                        {country ? country.name : trip.code}
-                      </Typography>
-                      {trip.note && (
-                        <Typography variant="body2" color="text.secondary">
-                          {trip.note}
-                        </Typography>
+                  <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                    <Box
+                      component={Link}
+                      to={`/country/${trip.code}`}
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 2,
+                        textDecoration: 'none',
+                        color: 'inherit',
+                        flexGrow: 1,
+                      }}
+                    >
+                      {country && (
+                        <Box
+                          component="img"
+                          src={country.flags.png}
+                          alt={country.name}
+                          sx={{ height: 40, borderRadius: 0.5 }}
+                        />
                       )}
+
+                      <Box>
+                        <Typography variant="subtitle1" fontWeight={700}>
+                          {country ? country.name : trip.code}
+                        </Typography>
+                        {trip.note && (
+                          <Typography variant="body2" color="text.secondary">
+                            {trip.note}
+                          </Typography>
+                        )}
+                        {trip.attractions && (
+                          <Typography variant="body2" color="text.secondary">
+                            {trip.attractions}
+                          </Typography>
+                        )}
+                      </Box>
                     </Box>
+
+                    <IconButton
+                      aria-label="Удалить поездку"
+                      onClick={() => handleDeleteTrip(index)}
+                      edge="end"
+                    >
+                      <DeleteOutlineIcon />
+                    </IconButton>
                   </Stack>
                 </CardContent>
               </Card>

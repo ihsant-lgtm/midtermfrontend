@@ -11,22 +11,18 @@ import {
 } from '@mui/material'
 import { useNavigate } from 'react-router-dom'
 import { REST_COUNTRIES_BASE_URL } from '../../constants/api'
-import type { Country } from '../../types/country'
+import type { Country, Trip } from '../../types/country'
 
 type CountryOption = Pick<Country, 'alpha3Code' | 'name'>
 
 const TRIPS_STORAGE_KEY = 'my_trips'
-
-interface StoredTrip {
-  code: string
-  note: string
-}
 
 export function AddCountryPage() {
   const navigate = useNavigate()
   const [countries, setCountries] = useState<CountryOption[]>([])
   const [selectedCountry, setSelectedCountry] = useState<CountryOption | null>(null)
   const [note, setNote] = useState('')
+  const [attractions, setAttractions] = useState('')
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -91,11 +87,12 @@ export function AddCountryPage() {
 
     try {
       const raw = window.localStorage.getItem(TRIPS_STORAGE_KEY)
-      const trips: StoredTrip[] = raw ? JSON.parse(raw) : []
+      const trips: Trip[] = raw ? JSON.parse(raw) : []
 
-      const newTrip: StoredTrip = {
+      const newTrip: Trip = {
         code: selectedCountry.alpha3Code,
         note: note.trim(),
+        attractions: attractions.trim(),
       }
 
       const updatedTrips = [...trips, newTrip]
@@ -150,6 +147,15 @@ export function AddCountryPage() {
               value={note}
               onChange={(event) => setNote(event.target.value)}
               placeholder="Например: хочу посетить летом"
+            />
+
+            <TextField
+              label="Достопримечательности"
+              multiline
+              minRows={2}
+              value={attractions}
+              onChange={(event) => setAttractions(event.target.value)}
+              placeholder="Что вы хотите посмотреть в этой стране"
             />
 
             {error && (

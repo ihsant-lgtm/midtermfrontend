@@ -26,10 +26,21 @@ export interface Country {
   alpha3Code: string
   capital: string
   region: string
+  subregion: string
   population: number
   area: number | null
+  timezones: string[]
+  borders: string[] | null
   flags: CountryFlags
   currencies: CountryCurrency[]
   languages: CountryLanguage[]
 }
+
+// Модель запланированной поездки пользователя
+export interface Trip {
+  code: string
+  note: string
+  attractions: string
+}
+
 
