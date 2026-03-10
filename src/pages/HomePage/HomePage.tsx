@@ -28,14 +28,14 @@ export function HomePage() {
   const [countries, setCountries] = useState<Record<string, CountrySummary>>({})
   const [loading, setLoading] = useState(false)
 
-  // Чтение списка поездок из localStorage
+
   useEffect(() => {
     const raw = window.localStorage.getItem(TRIPS_STORAGE_KEY)
     const parsed: Trip[] = raw ? JSON.parse(raw) : []
     setTrips(parsed)
   }, [])
 
-  // Загрузка краткой информации о странах по сохранённым кодам
+
   useEffect(() => {
     const loadCountries = async () => {
       if (trips.length === 0) return
