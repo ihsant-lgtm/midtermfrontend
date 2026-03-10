@@ -1,17 +1,17 @@
-// Описание структуры флагов страны из API Rest Countries
+
 export interface CountryFlags {
   png: string
   svg: string
 }
 
-// Описание валюты страны
+
 export interface CountryCurrency {
   code: string
   name: string
   symbol: string
 }
 
-// Описание языка, на котором говорят в стране
+
 export interface CountryLanguage {
   iso639_1: string | null
   iso639_2: string
@@ -19,7 +19,7 @@ export interface CountryLanguage {
   nativeName: string
 }
 
-// Базовый интерфейс страны, используемый во всём приложении
+
 export interface Country {
   name: string
   nativeName: string
@@ -36,7 +36,7 @@ export interface Country {
   languages: CountryLanguage[]
 }
 
-// Модель запланированной поездки пользователя
+
 export interface Trip {
   code: string
   note: string
