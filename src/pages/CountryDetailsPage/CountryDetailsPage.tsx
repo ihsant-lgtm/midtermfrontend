@@ -11,7 +11,7 @@ export function CountryDetailsPage() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Загрузка подробной информации о стране по её alpha3Code
+
   useEffect(() => {
     if (!code) return
 
