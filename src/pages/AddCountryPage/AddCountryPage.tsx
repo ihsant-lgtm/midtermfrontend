@@ -27,7 +27,7 @@ export function AddCountryPage() {
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
-  // Загрузка списка стран из API Rest Countries
+
   useEffect(() => {
     let cancelled = false
 
@@ -75,7 +75,7 @@ export function AddCountryPage() {
     }
   }, [])
 
-  // Сохранение выбранной поездки в localStorage
+
   const handleAddTrip = async () => {
     if (!selectedCountry) {
       setError('Пожалуйста, выберите страну')
